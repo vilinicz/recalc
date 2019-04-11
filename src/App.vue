@@ -194,10 +194,18 @@ export default {
         transition: fill 0.25s ease;
         cursor: pointer;
         stroke: #fff;
-        stroke-width: 6px;
-        box-shadow: 2px 2px 3px red;
+        stroke-width: 2px;
         &:hover { fill: $secondary; }
         &.selected { fill: $primary; }
+        @media (min-width: 600px) {
+          stroke-width: 3px;
+        }
+        @media (min-width: 800px) {
+          stroke-width: 4px;
+        }
+        @media (min-width: 1200px) {
+          stroke-width: 6px;
+        }
       }
     }
 
