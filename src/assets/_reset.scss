@@ -29,11 +29,15 @@ body {
   font-weight: 400;
   font-style: normal;
   color: #373a3c;
-  background-color: #fff;
+  // background-color: #fff;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: grayscale;
   -moz-font-feature-settings: "liga" on;
+}
+
+body, html {
+  height: 100%;
 }
 
 /**

@@ -1,5 +1,5 @@
 {
-  "name": "pcal",
+  "name": "recalc",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,6 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "d3-geo": "^1.11.3",
-    "osme": "^1.3.0",
     "vue": "^2.6.6"
   },
   "devDependencies": {

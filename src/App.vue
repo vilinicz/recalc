@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <div
-      ref="map"
-      class="map"
-    >
-      <svg
-        :height="height"
-        :viewBox="`0 0 ${width} ${height}`"
-        :width="width"
+    <div class="recalc">
+      <div
+        ref="map"
+        class="map"
       >
-        <g class="wrapper">
+        <svg
+          :height="height"
+          :viewBox="`0 0 ${width} ${height}`"
+          :width="width"
+        >
           <g class="districts">
             <path
               v-for="(d, i) in districts"
@@ -22,45 +22,43 @@
               @click="select(d)"
             />
           </g>
-        </g>
-      </svg>
-    </div>
+        </svg>
+      </div>
 
-    <div class="form">
-      <label for="district">Округ Москвы
-        <select
-          id="district"
-          v-model="selected"
-          class="district"
-        >
-          <option
-            v-for="(d, i) in districts"
-            :key="i"
-            :value="d"
+      <div class="form">
+        <div class="district">
+          <label for="district">Округ</label>
+          <select
+            id="district"
+            v-model="selected"
+            class="input"
           >
-            {{ d.properties.name }}
-          </option>
-        </select>
-      </label>
+            <option
+              v-for="(d, i) in districts"
+              :key="i"
+              :value="d"
+            >
+              {{ d.properties.name }}
+            </option>
+          </select>
+        </div>
 
-      <label
-        for="area"
-        class="area"
-      >
-        Площадь
-        <input
-          id="area"
-          v-model="area"
-          type="number"
-          :min="areaMin"
-        >
-      </label>
+        <div class="area">
+          <label for="district">Площадь</label>
+          <input
+            id="area"
+            v-model="area"
+            class="input"
+            type="number"
+            :min="areaMin"
+            :max="areaMax"
+          >
+        </div>
 
-      <div
-        class="total"
-      >
-        <div v-if="selected">
-          {{ total }}
+        <div class="total">
+          <div v-if="selected">
+            ₽{{ total }}
+          </div>
         </div>
       </div>
     </div>
@@ -69,7 +67,7 @@
 
 <script>
 import { geoMercator, geoPath } from 'd3-geo';
-import mapData from '@/assets/moscow_districts_simplified.geo.json';
+import mapData from '@/assets/old_moscow_districts_simplified.geo.json';
 
 
 export default {
@@ -177,17 +175,31 @@ export default {
   $primary: #364f6b;
 
   #app {
-    height: 100vh;
-    display: flex;
+    height: 100%;
+    width: 100%;
+    background-color: $primary;
+    position: relative;
+
+    .recalc {
+      position:absolute;
+      top: 0; bottom: 0; left: 0; right: 0;
+      margin: auto;
+      max-width: 450px;
+      max-height: 650px;
+      min-height: 450px;
+      height: 80%;
+      box-shadow: 0 2px 10px rgba(#000, 0.1);
+      border-radius: 14px;
+      padding: 1rem;
+      background-color: #fff;
+    }
 
     // #### MAP ####
     .map {
-      height: 100vh;
+      height: 40%;
       overflow: hidden;
-      width: 50%;
       position: relative;
       svg {}
-      .wrapper {}
       .districts {}
       .d {
         fill: $gray;
@@ -197,15 +209,6 @@ export default {
         stroke-width: 2px;
         &:hover { fill: $secondary; }
         &.selected { fill: $primary; }
-        @media (min-width: 600px) {
-          stroke-width: 3px;
-        }
-        @media (min-width: 800px) {
-          stroke-width: 4px;
-        }
-        @media (min-width: 1200px) {
-          stroke-width: 6px;
-        }
       }
     }
 
@@ -213,13 +216,66 @@ export default {
     .form {
       display: flex;
       flex-flow: column nowrap;
-      justify-content: space-around;
+      height: 60%;
+      font-size: 1.1rem;
+      position: relative;
 
       label {
         display: block;
+        margin-bottom: 1rem;
       }
-      input, select {
+      .input {
+        -webkit-appearance: none;
         display: block;
+        width: 100%;
+        background-color: $light;
+        padding: 0 1rem;
+        height: 2.6rem;
+        margin-top: 1rem;
+        border-radius: 1.8rem;
+      }
+      .district, .area {
+        margin-bottom: 1rem;
+      }
+      .total {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+        padding: 0 1rem;
+        margin: -1rem;
+        margin-top: auto;
+        background-color: $gray;
+        border-bottom-left-radius: 14px;
+        border-bottom-right-radius: 14px;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+    }
+    @media (min-width: 768px) {
+      .map {
+        height: 45%;
+        .d {
+          stroke-width: 3px;
+        }
+      }
+      .form {
+        height: 55%;
+
+        .input {
+          height: 3rem;
+          border-radius: 1.5rem;
+        }
+
+        .district, .area {
+          margin-bottom: 2rem;
+        }
+
+        .total {
+          font-size: 2rem;
+          height: 4rem;
+        }
       }
     }
   }
