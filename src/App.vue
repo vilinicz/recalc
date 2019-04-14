@@ -79,7 +79,6 @@ export default {
       height: 0,
 
       meterCost: 210000,
-      coef: 1.2,
 
       districts: [],
       area: 1500,
@@ -93,7 +92,7 @@ export default {
 
   computed: {
     total() {
-      return this.area * this.meterCost * this.coefficient;
+      return Math.round(this.area * this.meterCost * this.coefficient);
     },
 
     coefficient() {
@@ -196,9 +195,11 @@ export default {
 
     // #### MAP ####
     .map {
-      height: 40%;
+      height: 50%;
       overflow: hidden;
       position: relative;
+      // For visual centering
+      margin-left: -2%;
       svg {}
       .districts {}
       .d {
@@ -216,13 +217,15 @@ export default {
     .form {
       display: flex;
       flex-flow: column nowrap;
-      height: 60%;
+      height: 50%;
       font-size: 1.1rem;
       position: relative;
 
       label {
         display: block;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.9rem;
+        color: $primary;
       }
       .input {
         -webkit-appearance: none;
@@ -231,8 +234,7 @@ export default {
         background-color: $light;
         padding: 0 1rem;
         height: 2.6rem;
-        margin-top: 1rem;
-        border-radius: 1.8rem;
+        border-radius: 4px;
       }
       .district, .area {
         margin-bottom: 1rem;
@@ -251,21 +253,21 @@ export default {
         display: flex;
         align-items: center;
         justify-content: flex-end;
+        color: $primary;
       }
     }
     @media (min-width: 768px) {
+      .recalc {
+        padding: 2rem;
+      }
       .map {
-        height: 45%;
         .d {
           stroke-width: 3px;
         }
       }
       .form {
-        height: 55%;
-
         .input {
           height: 3rem;
-          border-radius: 1.5rem;
         }
 
         .district, .area {
@@ -275,6 +277,8 @@ export default {
         .total {
           font-size: 2rem;
           height: 4rem;
+          margin: -2rem;
+          margin-top: auto;
         }
       }
     }
