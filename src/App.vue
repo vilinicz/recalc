@@ -44,15 +44,29 @@
         </div>
 
         <div class="area">
-          <label for="district">Площадь</label>
-          <input
-            id="area"
+          <div class="wrapper">
+            <label for="area">
+              Площадь м<sup>2</sup>
+            </label>
+            <input
+              id="area"
+              v-model="area"
+              class="input"
+              type="number"
+              :min="areaMin"
+              :max="areaMax"
+            >
+          </div>
+          <vue-slider
             v-model="area"
-            class="input"
-            type="number"
             :min="areaMin"
             :max="areaMax"
-          >
+            :marks="marks"
+            :contained="true"
+            :interval="100"
+            dot-size="16"
+            :height="6"
+          />
         </div>
 
         <div class="total">
@@ -66,12 +80,17 @@
 </template>
 
 <script>
+import VueSlider from 'vue-slider-component';
+
 import { geoMercator, geoPath } from 'd3-geo';
 import mapData from '@/assets/old_moscow_districts_simplified.geo.json';
 
 
 export default {
   name: 'App',
+  components: {
+    VueSlider,
+  },
 
   data() {
     return {
@@ -81,9 +100,23 @@ export default {
       meterCost: 210000,
 
       districts: [],
-      area: 1500,
+      area: 10000,
       areaMin: 1000,
       areaMax: 50000,
+      marks: {
+        1000: {
+          label: '1000',
+          labelStyle: {
+            transform: 'translateX(-12%)',
+          },
+        },
+        50000: {
+          label: '50000',
+          labelStyle: {
+            transform: 'translateX(-88%)',
+          },
+        },
+      },
 
       selected: undefined,
       hovered: undefined,
@@ -134,6 +167,7 @@ export default {
     this.width = this.$el.querySelector('.map').clientWidth;
 
     this.districts = mapData.features.sort((a, b) => a.properties.id - b.properties.id);
+    [this.selected] = this.districts;
   },
 
   methods: {
@@ -172,6 +206,11 @@ export default {
   $gray: #fce38a;
   $secondary: #fc5185;
   $primary: #364f6b;
+
+  $bgColor: $gray;
+  $themeColor: $primary;
+  @import '~vue-slider-component/lib/theme/antd';
+
 
   #app {
     height: 100%;
@@ -217,6 +256,7 @@ export default {
     .form {
       display: flex;
       flex-flow: column nowrap;
+      flex-shrink: 0;
       height: 50%;
       font-size: 1.1rem;
       position: relative;
@@ -238,6 +278,20 @@ export default {
       }
       .district, .area {
         margin-bottom: 1rem;
+      }
+      .area > .wrapper{
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        input, label {
+          width: auto;
+          flex: 1 1 auto;
+          margin-bottom: 0;
+        }
+      }
+      .area .vue-slider {
+        padding: 8px 4px !important;
       }
       .total {
         font-size: 1.5rem;
