@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <div class="recalc">
+    <div class="header">
+      Экспресс оценка стоимости объекта*
+    </div>
+
+    <div class="calculator">
       <div
         ref="map"
         class="map"
@@ -11,23 +15,36 @@
           :width="width"
         >
           <g class="districts">
-            <path
+            <g
               v-for="(d, i) in districts"
               :key="`path-${i}`"
               :class="{'selected': d === selected}"
-              :d="geoPath().projection(projection())(d)"
-              :fill="`rgba(38,50,56,${1 / districts.length * i})`"
               class="d"
-              vector-effect="non-scaling-stroke"
               @click="select(d)"
-            />
+            >
+
+              <path
+                :d="geoPath().projection(projection())(d)"
+                vector-effect="non-scaling-stroke"
+              />
+              <text
+                :class="`label-${d.properties.id}`"
+                :x="geoPath().projection(projection()).centroid(d)[0]"
+                :y="geoPath().projection(projection()).centroid(d)[1]"
+                alignment-baseline="central"
+                class="label"
+                fill="black"
+                text-anchor="middle"
+              >{{ d.properties.abbr }}
+              </text>
+            </g>
           </g>
         </svg>
       </div>
 
       <div class="form">
         <div class="district">
-          <label for="district">Округ</label>
+          <label for="district">Укажите округ:</label>
           <select
             id="district"
             v-model="selected"
@@ -38,7 +55,7 @@
               :key="i"
               :value="d"
             >
-              {{ d.properties.name }}
+              {{ d.properties.abbr }}
             </option>
           </select>
         </div>
@@ -51,30 +68,26 @@
             <input
               id="area"
               v-model="area"
+              :max="areaMax"
+              :min="areaMin"
               class="input"
               type="number"
-              :min="areaMin"
-              :max="areaMax"
             >
           </div>
           <vue-slider
             v-model="area"
-            :min="areaMin"
-            :max="areaMax"
-            :marks="marks"
             :contained="true"
-            :interval="100"
+            :height="3"
+            :max="areaMax"
+            :min="areaMin"
             dot-size="16"
-            :height="6"
           />
         </div>
-
-        <div class="total">
-          <div v-if="selected">
-            ₽{{ total }}
-          </div>
-        </div>
       </div>
+    </div>
+
+    <div class="result">
+      Results
     </div>
   </div>
 </template>
@@ -82,7 +95,7 @@
 <script>
 import VueSlider from 'vue-slider-component';
 
-import { geoMercator, geoPath } from 'd3-geo';
+import { geoCentroid, geoMercator, geoPath } from 'd3-geo';
 import mapData from '@/assets/old_moscow_districts_simplified.geo.json';
 
 
@@ -103,20 +116,6 @@ export default {
       area: 10000,
       areaMin: 1000,
       areaMax: 50000,
-      marks: {
-        1000: {
-          label: '1000',
-          labelStyle: {
-            transform: 'translateX(-12%)',
-          },
-        },
-        50000: {
-          label: '50000',
-          labelStyle: {
-            transform: 'translateX(-88%)',
-          },
-        },
-      },
 
       selected: undefined,
       hovered: undefined,
@@ -180,6 +179,10 @@ export default {
       return geoPath();
     },
 
+    centroid() {
+      return geoCentroid();
+    },
+
     districtAbbr(string) {
       return string[0];
     },
@@ -202,139 +205,133 @@ export default {
 </script>
 
 <style lang="scss">
-  $light: #feffdb;
-  $gray: #fce38a;
-  $secondary: #fc5185;
-  $primary: #364f6b;
+  $light: #F2F7FA;
+  $gray: #dcdcdc;
+  $black: #181818;
+  $red: #EB1E4B;
 
-  $bgColor: $gray;
+  $primary: $red;
+
+  $bgColor: rgba(#c3c3c3, 0.7);
   $themeColor: $primary;
-  @import '~vue-slider-component/lib/theme/antd';
+  @import '~vue-slider-component/lib/theme/default';
 
 
   #app {
-    height: 100%;
-    width: 100%;
-    background-color: $primary;
+    min-height: 100%;
+    min-width: 100%;
+    background: $light linear-gradient(324.93deg, #EBEFF2 -3.08%, #F2F7FA 91.37%, #F2F7FA 91.37%);
     position: relative;
+    padding: 4vh 4vw;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
 
-    .recalc {
-      position:absolute;
-      top: 0; bottom: 0; left: 0; right: 0;
-      margin: auto;
-      max-width: 450px;
-      max-height: 650px;
-      min-height: 450px;
-      height: 80%;
-      box-shadow: 0 2px 10px rgba(#000, 0.1);
-      border-radius: 14px;
-      padding: 1rem;
-      background-color: #fff;
+    grid-template-areas:
+      'header'
+      'calculator'
+      'result';
+
+
+    .header {
+      grid-area: header;
+      font-weight: 900;
+      font-size: 32px;
+      color: $black;
+      line-height: 1;
+      padding-bottom: 10px;
+      border-bottom: 2px solid $gray;
     }
 
-    // #### MAP ####
-    .map {
-      height: 50%;
-      overflow: hidden;
-      position: relative;
-      // For visual centering
-      margin-left: -2%;
-      svg {}
-      .districts {}
-      .d {
-        fill: $gray;
-        transition: fill 0.25s ease;
-        cursor: pointer;
-        stroke: #fff;
-        stroke-width: 2px;
-        &:hover { fill: $secondary; }
-        &.selected { fill: $primary; }
-      }
-    }
 
-    // #### FORM  ####
-    .form {
-      display: flex;
-      flex-flow: column nowrap;
-      flex-shrink: 0;
-      height: 50%;
-      font-size: 1.1rem;
-      position: relative;
+    .calculator {
+      grid-area: calculator;
+      padding: 5vh 0;
 
-      label {
-        display: block;
-        margin-bottom: 0.75rem;
-        font-size: 0.9rem;
-        color: $primary;
-      }
-      .input {
-        -webkit-appearance: none;
-        display: block;
-        width: 100%;
-        background-color: $light;
-        padding: 0 1rem;
-        height: 2.6rem;
-        border-radius: 4px;
-      }
-      .district, .area {
-        margin-bottom: 1rem;
-      }
-      .area > .wrapper{
-        display: flex;
-        flex-flow: row wrap;
-        align-items: center;
-        margin-bottom: 0.75rem;
-        input, label {
-          width: auto;
-          flex: 1 1 auto;
-          margin-bottom: 0;
-        }
-      }
-      .area .vue-slider {
-        padding: 8px 4px !important;
-      }
-      .total {
-        font-size: 1.5rem;
-        font-weight: bold;
-        text-align: right;
-        padding: 0 1rem;
-        margin: -1rem;
-        margin-top: auto;
-        background-color: $gray;
-        border-bottom-left-radius: 14px;
-        border-bottom-right-radius: 14px;
-        height: 3rem;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        color: $primary;
-      }
-    }
-    @media (min-width: 768px) {
-      .recalc {
-        padding: 2rem;
-      }
       .map {
+        height: 300px;
+        margin-left: -2%;
+
         .d {
-          stroke-width: 3px;
+          fill: $gray;
+          transition: fill 0.25s ease;
+          cursor: pointer;
+          stroke: $light;
+          stroke-width: 2px;
+
+          &:hover {
+            fill: darken($gray, 5%);
+            .label {
+              fill: $black;
+            }
+          }
+
+          &.selected {
+            fill: $primary;
+            .label {
+              fill: $light;
+            }
+          }
+
+          &:hover, &.selected {
+            .label {
+              opacity: 1;
+            }
+          }
+        }
+
+        .label {
+          opacity: 0;
+          transition: opacity 0.20s ease;
+          font-size: 12px;
+          font-weight: bold;
+          z-index: 1;
+          stroke-width: 0;
+          font-variant: small-caps;
         }
       }
-      .form {
-        .input {
-          height: 3rem;
-        }
+
 
         .district, .area {
-          margin-bottom: 2rem;
+          margin-bottom: 1rem;
+          label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            color: $black;
+          }
+
+          .input {
+            -webkit-appearance: none;
+            display: block;
+            background-color: transparent;
+            border-bottom: 2px solid $primary;
+            font-size: 24px;
+            line-height: 29px;
+            font-weight: 800;
+          }
         }
 
-        .total {
-          font-size: 2rem;
-          height: 4rem;
-          margin: -2rem;
-          margin-top: auto;
+        .area > .wrapper {
+          //display: flex;
+          //flex-flow: row wrap;
+          //align-items: center;
+          margin-bottom: 0.75rem;
+
+          input, label {
+            width: auto;
+            flex: 1 1 auto;
+            //margin-bottom: 0;
+          }
+        }
+
+        .area .vue-slider {
+          padding: 8px 4px !important;
         }
       }
+
+    .result {
+      grid-area: result;
     }
   }
 </style>

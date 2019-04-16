@@ -1,5 +1,4 @@
 /* normalize v8.0.0 + reset.css v2.0 + reboot.css + Edits from 12.02.19 */
-
 *,
 *::before,
 *::after {
@@ -244,4 +243,37 @@ svg:not(:root) {
   @-ms-viewport {
     width: device-width;
   }
+}
+
+// Global Styles
+
+@font-face {
+  font-family: "Gilroy";
+  font-style: italic;
+  src: url("./fonts/Gilroy-RegularItalic.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 800;
+  src: url("./fonts/Gilroy-ExtraBold.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  font-weight: 900;
+  src: url("./fonts/Gilroy-Black.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("./fonts/Gilroy-Medium.woff") format("woff");
+}
+
+html, body {
+  font-family: 'Gilroy', -apple-system, system-ui,
+  BlinkMacSystemFont, "Segoe UI", Roboto,
+  Oxygen-Sans, Ubuntu, "Helvetica Neue", sans-serif;
+
+  background-color: #F2F7FA;
 }
