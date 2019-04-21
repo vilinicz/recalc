@@ -9,9 +9,10 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
-    "d3-geo": "^1.11.3",
     "vue": "^2.6.6",
-    "vue-slider-component": "^3.0.26"
+    "vue-numeric": "^2.3.0",
+    "vue-slider-component": "^3.0.26",
+    "vue2-smooth-scroll": "^1.0.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",
