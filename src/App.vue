@@ -59,10 +59,10 @@
       </div>
 
       <div class="area">
-        <label for="area">
-          Площадь обьекта:
-        </label>
         <div class="wrapper">
+          <label for="area">
+            Площадь обьекта:
+          </label>
           <vue-numeric
             id="area"
             v-model="area"
@@ -77,20 +77,20 @@
         <vue-slider
           v-model="area"
           :contained="true"
-          :height="3"
+          :height="4"
           :max="areaMax"
           :min="areaMin"
           tooltip="none"
           :interval="100"
-          dot-size="16"
+          dot-size="20"
         />
       </div>
-      <a
+      <!--a
         v-smooth-scroll
         href="#result"
         class="btn"
         @click="calculate()"
-      >Рассчитать</a>
+      >Рассчитать</a-->
     </div>
 
     <div
@@ -131,14 +131,15 @@
           </div>
 
           <div class="disclaimer">
-            *Дисклеймер про оферту и все такое вот разное,
-            например две строчки, ну или там
+            *Результаты оценки указываются приблизительные,
+            без учета индивидуальных факторов, влияющих на реальную стоимость.
+            Для точной информации обратитесь к нашим специалистам:
           </div>
 
           <a
             href="#contacts"
             class="btn"
-          >Обсудить</a>
+          >Оставить заявку</a>
         </div>
       </transition>
     </div>
@@ -166,20 +167,34 @@ export default {
 
       selected: districts[0],
 
-      calculated: false,
+      calculated: true,
 
-      currentCost: 0,
-      rebuildCost: 0,
-      newCost: 0,
+      // currentCost: 0,
+      // rebuildCost: 0,
+      // newCost: 0,
     };
+  },
+
+  computed: {
+    currentCost() {
+      return Math.round(this.area * this.selected.old_meter_cost);
+    },
+
+    rebuildCost() {
+      return Math.round(this.area * this.selected.development_meter_cost);
+    },
+
+    newCost() {
+      return Math.round(this.area * this.selected.new_meter_cost);
+    },
   },
 
   methods: {
     calculate() {
       this.calculated = false;
-      this.currentCost = Math.round(this.area * this.selected.old_meter_cost);
-      this.rebuildCost = Math.round(this.area * this.selected.development_meter_cost);
-      this.newCost = Math.round(this.area * this.selected.new_meter_cost);
+      // this.currentCost = Math.round(this.area * this.selected.old_meter_cost);
+      // this.rebuildCost = Math.round(this.area * this.selected.development_meter_cost);
+      // this.newCost = Math.round(this.area * this.selected.new_meter_cost);
 
       setTimeout(() => {
         this.calculated = true;
@@ -206,18 +221,21 @@ export default {
   $red: #F8244B;
 
   $primary: $red;
+  $blue: #394874;
+  $blue-map: #476597;
+  $gray-map: #AFBBCE;
 
-  $bgColor: rgba(#c3c3c3, 0.7);
+  $bgColor: #104670; //rgba(#c3c3c3, 0.7);
   $themeColor: $primary;
   @import '~vue-slider-component/lib/theme/default';
 
 
   #app {
-    color: $black;
-    min-height: 100%;
-    background: $light linear-gradient(20.06deg, #D8D8D8 -54.86%, #F2F7FA 53.79%, #FFFFFF 101.94%);
+    color: $blue;
     position: relative;
-    padding: 2rem 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(228.61deg, #FFFFFF 2.65%, #D8D8D8 124.94%);
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows:
@@ -227,32 +245,34 @@ export default {
     grid-template-areas: 'header' 'calculator' 'result';
 
     @media(min-width: 1024px) {
-      padding: 5vh 6vw;
+      margin: auto;
+      width: 900px;
+      height: 674px;
+      padding: 50px 25px;
       grid-template-columns: 1fr 1fr;
-      grid-column-gap: 6vw;
+      grid-column-gap: 25px;
       grid-template-rows: auto 1fr;
       grid-template-areas:
         'header header'
         'calculator result';
     }
-    @media (min-width: 1200px) {
-      padding: 8vh 10vw;
-      grid-column-gap: 10vw;
-    }
 
     .btn {
       width: 100%;
-      height: 52px;
+      height: 60px;
       display: flex;
       flex-shrink: 0;
       align-items: center;
       justify-content: center;
       padding: 1rem;
-      background-color: $black;
+      background: linear-gradient(355.43deg, #A61E34 -188.54%, #F8244B 158.01%);
+      box-shadow: -9px 7px 14px #C7C7C7;
       color: #fff;
       margin-top: 1.25rem;
       font-size: 16px;
+      font-weight: 500;
       transition: opacity 0.25s ease;
+
       &:hover {
         opacity: 0.8;
       }
@@ -266,15 +286,15 @@ export default {
       grid-area: header;
       font-weight: 900;
       font-size: 28px;
-      color: $black;
       line-height: 1.1;
+      padding: 0 25px;
       padding-bottom: 1rem;
-      border-bottom: 2px solid $gray;
+      // border-bottom: 2px solid $gray;
       @media(min-width: 768px) {
         font-size: 34px;
       }
-      @media(min-width: 1200px) {
-        font-size: 38px;
+      @media(min-width: 1024px) {
+        font-size: 42px;
       }
     }
 
@@ -285,32 +305,36 @@ export default {
       flex-flow: column nowrap;
       justify-content: space-between;
       overflow: hidden;
-      padding-top: 1.25rem;
+      padding: 1.25rem 25px 0;
 
       .map {
-        margin: auto;
+        // margin: auto;
+        padding: 10px;
+        padding-left: 15px;
+        margin: -10px;
+        margin-top: -60px;
         overflow: hidden;
-        max-width: 33vh;
-        width: 100%;
-
-        @media(min-width: 1024px) {
-          max-width: 40vh;
-        }
+        //height: 270px;
+        width: 270px;
+        // width: 100%;
 
         svg {
           height: 100%;
           width: 100%;
+          filter:
+            drop-shadow(-5px 3px 0px #566093)
+            drop-shadow(-2px 4px 3px rgba(69, 89, 114, 0.4));
         }
 
         .d {
-          fill: $gray;
+          fill: $blue-map;
           transition: fill 0.25s ease;
           cursor: pointer;
           stroke: $light;
-          stroke-width: 2px;
+          stroke-width: 1px;
 
           &:hover {
-            fill: darken($gray, 5%);
+            fill: $gray-map;
 
             .label {
               fill: $black;
@@ -318,7 +342,7 @@ export default {
           }
 
           &.selected {
-            fill: $primary;
+            fill: $gray-map;
 
             .label {
               fill: $light;
@@ -349,7 +373,6 @@ export default {
           display: block;
           margin-bottom: 1rem;
           font-size: 1rem;
-          color: $black;
         }
 
         .input {
@@ -358,6 +381,7 @@ export default {
           font-size: 18px;
           font-weight: 800;
           line-height: 1;
+          color: $blue;
         }
 
         @media(min-width: 768px) {
@@ -368,36 +392,60 @@ export default {
             font-size: 24px;
           }
         }
+
+        @media(min-width: 1024px) {
+          label {
+            font-size: 15px;
+          }
+          .input {
+            font-size: 34px;
+          }
+        }
       }
 
       .district {
-        align-self: flex-start;
+        align-self: flex-end;
+        text-align: right;
         select {
-          background: transparent url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") no-repeat;
+          background: transparent url(assets/polygon.svg) no-repeat;
           background-position-x: 100%;
           background-position-y: 50%;
-          padding-right: 20px;
+          padding-right: 30px;
+          text-align: right;
+          text-align-last:right;
+          position: relative;
         }
       }
 
-      .area {
-        text-align: right;
+
+    .area {
         margin-top: auto;
+        margin-bottom: 48px;
         .wrapper {
           display: flex;
-          justify-content: flex-end;
+          justify-content: space-between;
           align-items: flex-end;
+          margin-bottom: 1rem;
+          label {
+            margin-bottom: 0;
+            line-height: 34px;
+            flex-shrink: 0;
+          }
+          input {
+            line-height: 34px;
+          }
         }
         .input {
           text-align: right;
+          width: 50%;
         }
         span {
           margin-left: 0.5rem;
-          font-size: 18px;
+          // font-size: 18px;
           font-weight: 800;
           line-height: 1.2;
-          @media(min-width: 768px) {
-            font-size: 24px;
+          @media(min-width: 1024px) {
+            font-size: 34px;
           }
         }
       }
@@ -410,21 +458,42 @@ export default {
             content: '';
             position: absolute;
             top: 0;
-            left: -6px;
-            width: 6px;
-            height: 3px;
+            left: -9px;
+            width: 11px;
+            height: 4px;
             background-color: $red;
           }
           &:after {
-            right: -6px;
+            right: -9px;
             left: auto;
             background-color: $bgColor;
           }
         }
+        .vue-slider-dot {
+          //width: 23px !important;
+          //height: 30px !important;
+          // background-image: url(assets/rectangle.svg);
+          // background-repeat: no-repeat;
+          // background-size: contain;
+          // box-shadow:  -7px 6px 12px rgba(35, 40, 53, 0.2556);
+
+        }
         .vue-slider-dot-handle {
           border-radius: 0;
-          box-shadow: none;
-          background-color: $red;
+          background: linear-gradient(46.38deg, #A61E34 -134.57%, #F8244B 52.56%);
+          box-shadow: -7px 6px 12px rgba(35, 40, 53, 0.2556);
+          z-index: 999;
+          //background-image: url(assets/rectangle.svg);
+          //background-repeat: no-repeat;
+          //background-size: contain;
+          //background-color: transparent;
+          //display: none;
+          // background: linear-gradient(46.38deg, #A61E34 -134.57%, #F8244B 52.56%);
+          //background-image: url(assets/rectangle.svg);
+          // background-position: 100% 50%;
+          //width: 23px;
+          //height: 30px;
+
         }
       }
 
@@ -439,6 +508,7 @@ export default {
 
     .result {
       grid-area: result;
+      padding: 0 25px;
       padding-top: 3rem;
       .calculated {
         height: 100%;
@@ -447,14 +517,14 @@ export default {
         justify-content: space-between;
       }
       .label {
-        margin-bottom: 1rem;
+        margin-bottom: 0.2rem;
       }
       .value {
         font-size: 24px;
         font-weight: 800;
         padding-bottom: 0.25rem;
-        margin-bottom: 1.5rem;
-        border-bottom: 2px solid rgba($gray, 0.5);
+        margin-bottom: 35px;
+        // border-bottom: 2px solid rgba($gray, 0.5);
         span {
           font-size: 0.8em;
         }
@@ -481,16 +551,17 @@ export default {
         background-color: $red;
       }
 
-      @media(min-width: 768px) {
+      @media(min-width: 1024px) {
         padding-top: 2.5rem;
         .label {
-          font-size: 1.2rem;
+          font-size: 1rem;
         }
         .value {
-          font-size: 32px;
+          font-size: 36px;
         }
         .total > .value {
-          font-size: 48px;
+          font-size: 52px;
+          margin-bottom: 20px;
         }
 
         .disclaimer {
