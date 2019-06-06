@@ -36,7 +36,9 @@ body {
 }
 
 body, html {
-  height: 100%;
+  @media(min-width: 768px) {
+    height: 100%;
+  }
 }
 
 /**
@@ -249,8 +251,8 @@ svg:not(:root) {
 
 @font-face {
   font-family: "Gilroy";
-  font-style: italic;
-  src: url("./fonts/Gilroy-RegularItalic.woff") format("woff");
+  font-weight: 600;
+  src: url("./fonts/Gilroy-Semibold.otf") format("otf");
 }
 
 @font-face {
@@ -265,16 +267,9 @@ svg:not(:root) {
   src: url("./fonts/Gilroy-Black.woff") format("woff");
 }
 
-@font-face {
-  font-family: "Gilroy";
-  src: url("./fonts/Gilroy-Medium.woff") format("woff");
-}
-
 html, body {
   font-size: 14px;
   font-family: 'Gilroy', -apple-system, system-ui,
   BlinkMacSystemFont, "Segoe UI", Roboto,
   Oxygen-Sans, Ubuntu, "Helvetica Neue", sans-serif;
-
-  background: #d8d8d8;
 }

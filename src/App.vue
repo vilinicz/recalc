@@ -1,12 +1,22 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+    class="app"
+  >
     <div class="header">
       Экспресс оценка стоимости объекта*
     </div>
 
     <div class="calculator">
       <div class="district">
-        <label for="district">Выберите округ:</label>
+        <label
+          for="district"
+          class="label mobile"
+        >Выберите <br> округ:</label>
+        <label
+          for="district"
+          class="label desktop"
+        >Выберите округ:</label>
         <select
           id="district"
           v-model="selected"
@@ -60,88 +70,84 @@
 
       <div class="area">
         <div class="wrapper">
-          <label for="area">
-            Площадь обьекта:
+          <label
+            for="area"
+            class="label mobile"
+          >
+            Площадь <br> объекта:
           </label>
-          <vue-numeric
-            id="area"
-            v-model="area"
-            class="input"
-            currency=""
-            separator="space"
-            :min="areaMin"
-            :max="areaMax"
-          />
-          <span>м2</span>
+          <label
+            for="area"
+            class="label desktop"
+          >
+            Площадь объекта:
+          </label>
+          <div class="input-wrapper">
+            <vue-numeric
+              id="area"
+              v-model="area"
+              :max="areaMax"
+              :min="areaMin"
+              class="input"
+              currency=""
+              separator="space"
+            />
+            <span>м2</span>
+          </div>
         </div>
         <vue-slider
           v-model="area"
           :contained="true"
           :height="4"
+          :interval="100"
           :max="areaMax"
           :min="areaMin"
+          dot-size="24"
           tooltip="none"
-          :interval="100"
-          dot-size="20"
         />
       </div>
-      <!--a
-        v-smooth-scroll
-        href="#result"
-        class="btn"
-        @click="calculate()"
-      >Рассчитать</a-->
     </div>
 
     <div
-      id="result"
       class="result"
     >
-      <transition name="fade">
-        <div
-          v-if="calculated"
-          class="calculated"
-        >
-          <div>
-            <div class="label">
-              Текущая стоимость объекта:
-            </div>
-            <div
-              class="value"
-              v-html="costToString(currentCost)"
-            />
+      <div
+        class="calculated"
+      >
+        <div>
+          <div class="label">
+            Текущая стоимость объекта:
           </div>
-          <div>
-            <div class="label">
-              Стоимость ретауна:
-            </div>
-            <div
-              class="value"
-              v-html="costToString(rebuildCost)"
-            />
-          </div>
-          <div class="total">
-            <div class="label">
-              Стоимость объекта после реновации:
-            </div>
-            <div
-              class="value"
-              v-html="costToString(newCost)"
-            />
-          </div>
-
-          <div class="disclaimer">
-            *Результаты оценки указываются приблизительные,
-            без учета индивидуальных факторов, влияющих на реальную стоимость.
-            Для точной информации обратитесь к нашим специалистам:
-          </div>
-
-          <a
-            href="#contacts"
-            class="btn"
-          >Оставить заявку</a>
+          <div
+            class="value"
+            v-html="costToString(currentCost)"
+          />
         </div>
-      </transition>
+        <div>
+          <div class="label">
+            Стоимость ретауна:
+          </div>
+          <div
+            class="value"
+            v-html="costToString(rebuildCost)"
+          />
+        </div>
+        <div class="total">
+          <div class="label">
+            Стоимость после ретауна:
+          </div>
+          <div
+            class="value"
+            v-html="costToString(newCost)"
+          />
+        </div>
+
+        <div class="disclaimer">
+          * Указаны приблизительные результаты оценки без учета частных факторов,
+          влияющих на реальную стоимость.
+          Для получения точных данных обратитесь к нашим специалистам.
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -166,12 +172,6 @@ export default {
       areaMax: 50000,
 
       selected: districts[0],
-
-      calculated: true,
-
-      // currentCost: 0,
-      // rebuildCost: 0,
-      // newCost: 0,
     };
   },
 
@@ -190,114 +190,70 @@ export default {
   },
 
   methods: {
-    calculate() {
-      this.calculated = false;
-      // this.currentCost = Math.round(this.area * this.selected.old_meter_cost);
-      // this.rebuildCost = Math.round(this.area * this.selected.development_meter_cost);
-      // this.newCost = Math.round(this.area * this.selected.new_meter_cost);
-
-      setTimeout(() => {
-        this.calculated = true;
-      }, 800);
-    },
-
     costToString(n) {
       if (n > 1000000000) {
-        return `${Math.round((n / 1000000000) * 10) / 10} <span>млрд. руб</span>`;
+        return `${Math.round((n / 1000000000) * 10) / 10} <span>млрд руб</span>`;
       }
       if (n > 1000000) {
-        return `${Math.round((n / 1000000) * 10) / 10} <span>млн. руб</span>`;
+        return `${Math.round((n / 1000000) * 10) / 10} <span>млн руб</span>`;
       }
-      return `${Math.round((n / 1000) * 10) / 10} <span>тыс. руб</span>`;
+      return `${Math.round((n / 1000) * 10) / 10} <span>тыс руб</span>`;
     },
   },
 };
 </script>
 
 <style lang="scss">
-  $light: #F2F7FA;
-  $gray: #dcdcdc;
+  $gray: #dfdfdf;
   $black: #181818;
-  $red: #F8244B;
-
-  $primary: $red;
+  $red: #E22245;
   $blue: #394874;
-  $blue-map: #476597;
-  $gray-map: #AFBBCE;
 
-  $bgColor: #104670; //rgba(#c3c3c3, 0.7);
-  $themeColor: $primary;
+  $bgColor: $blue; //rgba(#c3c3c3, 0.7);
+  $themeColor: $red;
   @import '~vue-slider-component/lib/theme/default';
 
 
-  #app {
+  .app {
     color: $blue;
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    background: linear-gradient(228.61deg, #FFFFFF 2.65%, #D8D8D8 124.94%);
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows:
-      auto
-      minmax(calc(100vh - 4rem - 80px - 60px), auto)
-      minmax(calc(100vh - 2rem - 60px), auto);
     grid-template-areas: 'header' 'calculator' 'result';
 
-    @media(min-width: 1024px) {
+    @media(min-width: 768px) {
+      top: 50%;
+      transform: translateY(-50%);
       margin: auto;
-      width: 900px;
-      height: 674px;
+      max-width: 900px;
+      max-height: 555px;
       padding: 50px 25px;
+      padding-bottom: 0;
       grid-template-columns: 1fr 1fr;
       grid-column-gap: 25px;
       grid-template-rows: auto 1fr;
-      grid-template-areas:
-        'header header'
-        'calculator result';
+      grid-template-areas: 'header header' 'calculator result';
     }
-
-    .btn {
-      width: 100%;
-      height: 60px;
-      display: flex;
-      flex-shrink: 0;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      background: linear-gradient(355.43deg, #A61E34 -188.54%, #F8244B 158.01%);
-      box-shadow: -9px 7px 14px #C7C7C7;
-      color: #fff;
-      margin-top: 1.25rem;
-      font-size: 16px;
-      font-weight: 500;
-      transition: opacity 0.25s ease;
-
-      &:hover {
-        opacity: 0.8;
-      }
-      @media(min-width: 768px) {
-        margin-top: 2.5rem;
-      }
-    }
-
 
     .header {
       grid-area: header;
       font-weight: 900;
       font-size: 28px;
-      line-height: 1.1;
-      padding: 0 25px;
+      // line-height: 1.1;
+      padding: 40px 20px;
       padding-bottom: 1rem;
       // border-bottom: 2px solid $gray;
       @media(min-width: 768px) {
-        font-size: 34px;
+        font-size: 36px;
+        padding: 0 25px;
+        padding-bottom: 1rem;
       }
-      @media(min-width: 1024px) {
+      @media(min-width: 900px) {
         font-size: 42px;
+        padding: 0 25px;
+        padding-bottom: 1rem;
       }
     }
-
 
     .calculator {
       grid-area: calculator;
@@ -308,152 +264,155 @@ export default {
       padding: 1.25rem 25px 0;
 
       .map {
-        // margin: auto;
-        padding: 10px;
-        padding-left: 15px;
-        margin: -10px;
-        margin-top: -60px;
         overflow: hidden;
-        //height: 270px;
-        width: 270px;
-        // width: 100%;
+        align-self: flex-end;
+        width: 180px;
+        margin: -40px 0;
 
         svg {
           height: 100%;
           width: 100%;
-          filter:
-            drop-shadow(-5px 3px 0px #566093)
-            drop-shadow(-2px 4px 3px rgba(69, 89, 114, 0.4));
         }
 
         .d {
-          fill: $blue-map;
+          fill: $gray;
           transition: fill 0.25s ease;
           cursor: pointer;
-          stroke: $light;
+          stroke: #fff;
           stroke-width: 1px;
 
-          &:hover {
-            fill: $gray-map;
-
-            .label {
-              fill: $black;
-            }
-          }
-
-          &.selected {
-            fill: $gray-map;
-
-            .label {
-              fill: $light;
-            }
-          }
-
           &:hover, &.selected {
-            .label {
-              // opacity: 1;
-            }
+            fill: $red;
           }
         }
 
-        .label {
-          opacity: 0;
-          transition: opacity 0.20s ease;
-          font-size: 12px;
-          font-weight: bold;
-          z-index: 1;
-          stroke-width: 0;
-          font-variant: small-caps;
+        @media (min-width: 768px) {
+          align-self: flex-start;
+          width: 220px;
+          margin-top: -60px;
         }
       }
 
       .district, .area {
         z-index: 2;
-        label {
+
+        .label {
           display: block;
-          margin-bottom: 1rem;
+          margin-bottom: 0.75rem;
+          font-weight: 800;
           font-size: 1rem;
+          &.desktop {
+            display: none;
+          }
         }
 
         .input {
           -webkit-appearance: none;
           background-color: transparent;
-          font-size: 18px;
-          font-weight: 800;
+          font-size: 24px;
+          font-weight: 900;
           line-height: 1;
           color: $blue;
         }
 
         @media(min-width: 768px) {
-          label {
-            font-size: 1.2rem;
+          .label {
+            font-size: 18px;
+            &.desktop {
+              display: block;
+            }
+            &.mobile {
+              display: none;
+            }
           }
           .input {
-            font-size: 24px;
-          }
-        }
-
-        @media(min-width: 1024px) {
-          label {
-            font-size: 15px;
-          }
-          .input {
-            font-size: 34px;
+            font-size: 32px;
           }
         }
       }
 
       .district {
-        align-self: flex-end;
-        text-align: right;
         select {
           background: transparent url(assets/polygon.svg) no-repeat;
           background-position-x: 100%;
           background-position-y: 50%;
-          padding-right: 30px;
-          text-align: right;
-          text-align-last:right;
+          padding-right: 25px;
           position: relative;
+        }
+
+        @media(min-width: 768px) {
+          align-self: flex-end;
+          text-align: right;
+          select {
+            text-align: right;
+            text-align-last: right;
+          }
         }
       }
 
 
-    .area {
+      .area {
         margin-top: auto;
-        margin-bottom: 48px;
+        // margin-bottom: 2rem;
+        align-self: flex-start;
+        width: 100%;
+
         .wrapper {
+          // margin-bottom: 1rem;
           display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-          margin-bottom: 1rem;
-          label {
-            margin-bottom: 0;
-            line-height: 34px;
-            flex-shrink: 0;
-          }
-          input {
-            line-height: 34px;
-          }
+          flex-flow: row wrap;
+          // justify-content: space-between;
+          align-items: baseline;
         }
+
+        .label {
+          flex-shrink: 0;
+          width: 100%;
+          font-size: 14px;
+          font-weight: 800;
+        }
+
         .input {
-          text-align: right;
-          width: 50%;
+          text-align: left;
+          width: 80px;
+          font-weight: 900;
         }
+
         span {
-          margin-left: 0.5rem;
-          // font-size: 18px;
+          margin-left: 0.25rem;
           font-weight: 800;
           line-height: 1.2;
-          @media(min-width: 1024px) {
+        }
+        @media(min-width: 768px) {
+          align-self: initial;
+          .wrapper {
+            justify-content: space-between;
+          }
+
+          .label {
+            font-size: 18px;
+            line-height: 34px;
+            width: auto;
+            margin-bottom: 0;
+          }
+          .input {
+            text-align: right;
+            width: 110px;
+            line-height: 34px;
+          }
+
+          span {
             font-size: 34px;
           }
         }
       }
 
       .area .vue-slider {
-        margin-top: 0.75rem;
-        .vue-slider-rail{
+        margin-top: 0.5rem;
+
+        .vue-slider-rail {
           position: relative;
+
           &:before, &:after {
             content: '';
             position: absolute;
@@ -463,45 +422,23 @@ export default {
             height: 4px;
             background-color: $red;
           }
+
           &:after {
             right: -9px;
             left: auto;
             background-color: $bgColor;
           }
         }
-        .vue-slider-dot {
-          //width: 23px !important;
-          //height: 30px !important;
-          // background-image: url(assets/rectangle.svg);
-          // background-repeat: no-repeat;
-          // background-size: contain;
-          // box-shadow:  -7px 6px 12px rgba(35, 40, 53, 0.2556);
 
-        }
         .vue-slider-dot-handle {
           border-radius: 0;
           background: linear-gradient(46.38deg, #A61E34 -134.57%, #F8244B 52.56%);
           box-shadow: -7px 6px 12px rgba(35, 40, 53, 0.2556);
           z-index: 999;
-          //background-image: url(assets/rectangle.svg);
-          //background-repeat: no-repeat;
-          //background-size: contain;
-          //background-color: transparent;
-          //display: none;
-          // background: linear-gradient(46.38deg, #A61E34 -134.57%, #F8244B 52.56%);
-          //background-image: url(assets/rectangle.svg);
-          // background-position: 100% 50%;
-          //width: 23px;
-          //height: 30px;
-
         }
       }
-
-      .btn {
-        background-color: $black;
-      }
-
       @media(min-width: 768px) {
+        padding: 0 25px;
         padding-top: 2.5rem;
       }
     }
@@ -509,49 +446,62 @@ export default {
     .result {
       grid-area: result;
       padding: 0 25px;
-      padding-top: 3rem;
+      padding-top: 0;
+
       .calculated {
         height: 100%;
         display: flex;
         flex-flow: column nowrap;
         justify-content: space-between;
       }
+
       .label {
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
       }
+
       .value {
         font-size: 24px;
-        font-weight: 800;
+        font-weight: 900;
         padding-bottom: 0.25rem;
-        margin-bottom: 35px;
+        margin-bottom: 1rem;
         // border-bottom: 2px solid rgba($gray, 0.5);
         span {
           font-size: 0.8em;
         }
       }
+
       .total {
         margin: auto 0;
+        .label {
+          font-weight: 800;
+          font-size: 16px;
+        }
+
         .value {
           border-bottom: 0;
           font-size: 42px;
           font-weight: 900;
+          color: $red;
         }
       }
 
       .disclaimer {
         margin-top: auto;
-        font-style: italic;
+        // font-style: italic;
         // To align with area slider
-        padding-bottom: 3px;
-        line-height: 16px;
+        font-weight: 600;
+        padding-bottom: 5px;
+        line-height: 18px;
 
-        font-size: 13px;
+        font-size: 14px;
       }
+
       .btn {
         background-color: $red;
       }
 
-      @media(min-width: 1024px) {
+      @media(min-width: 768px) {
         padding-top: 2.5rem;
         .label {
           font-size: 1rem;
@@ -559,21 +509,30 @@ export default {
         .value {
           font-size: 36px;
         }
+        .total > .label {
+          font-size: 18px;
+        }
         .total > .value {
           font-size: 52px;
           margin-bottom: 20px;
         }
+      }
+    }
 
-        .disclaimer {
-          font-size: 1rem;
-        }
+    .result, .calculator {
+      padding-bottom: 25px;
+      @media (min-width: 768px) {
+        padding-bottom: 45px;
       }
     }
   }
+
   .fade-enter-active, .fade-leave-active {
     transition: opacity .25s ease-in-out;
   }
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+  {
     opacity: 0;
   }
 
