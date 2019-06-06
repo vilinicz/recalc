@@ -252,19 +252,22 @@ svg:not(:root) {
 @font-face {
   font-family: "Gilroy";
   font-weight: 600;
+  font-display: auto;
   src: url("./fonts/Gilroy-Semibold.otf") format("otf");
 }
 
 @font-face {
   font-family: "Gilroy";
   font-weight: 800;
-  src: url("./fonts/Gilroy-ExtraBold.woff") format("woff");
+  font-display: auto;
+  src: url("./fonts/Gilroy-Extrabold.otf") format("otf");
 }
 
 @font-face {
   font-family: "Gilroy";
   font-weight: 900;
-  src: url("./fonts/Gilroy-Black.woff") format("woff");
+  font-display: auto;
+  src: url("./fonts/Gilroy-Black.otf") format("otf");
 }
 
 html, body {
