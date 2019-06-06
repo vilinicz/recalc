@@ -222,11 +222,8 @@ export default {
     grid-template-areas: 'header' 'calculator' 'result';
 
     @media(min-width: 768px) {
-      top: 50%;
-      transform: translateY(-50%);
       margin: auto;
       max-width: 900px;
-      max-height: 555px;
       padding: 50px 25px;
       padding-bottom: 0;
       grid-template-columns: 1fr 1fr;
@@ -261,13 +258,14 @@ export default {
       flex-flow: column nowrap;
       justify-content: space-between;
       overflow: hidden;
-      padding: 1.25rem 25px 0;
+      padding: 1.25rem 20px 0;
 
       .map {
         overflow: hidden;
         align-self: flex-end;
         width: 180px;
-        margin: -40px 0;
+        margin: -65px 0;
+        z-index: 3;
 
         svg {
           height: 100%;
@@ -289,7 +287,7 @@ export default {
         @media (min-width: 768px) {
           align-self: flex-start;
           width: 220px;
-          margin-top: -60px;
+          margin-top: -55px;
         }
       }
 
@@ -317,7 +315,7 @@ export default {
 
         @media(min-width: 768px) {
           .label {
-            font-size: 18px;
+            font-size: 16px;
             &.desktop {
               display: block;
             }
@@ -329,6 +327,12 @@ export default {
             font-size: 32px;
           }
         }
+
+        @media(min-width: 900px) {
+          .label {
+            font-size: 18px;
+          }
+        }
       }
 
       .district {
@@ -336,7 +340,7 @@ export default {
           background: transparent url(assets/polygon.svg) no-repeat;
           background-position-x: 100%;
           background-position-y: 50%;
-          padding-right: 25px;
+          padding-right: 18px;
           position: relative;
         }
 
@@ -344,6 +348,7 @@ export default {
           align-self: flex-end;
           text-align: right;
           select {
+            padding-right: 25px;
             text-align: right;
             text-align-last: right;
           }
@@ -353,62 +358,56 @@ export default {
 
       .area {
         margin-top: auto;
-        // margin-bottom: 2rem;
         align-self: flex-start;
         width: 100%;
 
         .wrapper {
-          // margin-bottom: 1rem;
           display: flex;
-          flex-flow: row wrap;
-          // justify-content: space-between;
+          flex-flow: column nowrap;
           align-items: baseline;
         }
 
         .label {
           flex-shrink: 0;
           width: 100%;
-          font-size: 14px;
-          font-weight: 800;
         }
 
         .input {
           text-align: left;
-          width: 80px;
-          font-weight: 900;
+          width: 92px;
+          font-variant-numeric: initial;
         }
 
         span {
-          margin-left: 0.25rem;
           font-weight: 800;
+          font-size: 22px;
           line-height: 1.2;
         }
         @media(min-width: 768px) {
           align-self: initial;
           .wrapper {
             justify-content: space-between;
+            flex-flow: row nowrap;
           }
 
           .label {
-            font-size: 18px;
-            line-height: 34px;
             width: auto;
             margin-bottom: 0;
           }
           .input {
             text-align: right;
-            width: 110px;
-            line-height: 34px;
+            width: 120px;
           }
 
           span {
-            font-size: 34px;
+            font-size: 30px;
+            margin-left: 0.25rem;
           }
         }
       }
 
       .area .vue-slider {
-        margin-top: 0.5rem;
+        margin-top: 0.7rem;
 
         .vue-slider-rail {
           position: relative;
@@ -417,14 +416,14 @@ export default {
             content: '';
             position: absolute;
             top: 0;
-            left: -9px;
-            width: 11px;
+            left: -12px;
+            width: 14px;
             height: 4px;
             background-color: $red;
           }
 
           &:after {
-            right: -9px;
+            right: -12px;
             left: auto;
             background-color: $bgColor;
           }
@@ -445,8 +444,7 @@ export default {
 
     .result {
       grid-area: result;
-      padding: 0 25px;
-      padding-top: 0;
+      padding: 0 20px;
 
       .calculated {
         height: 100%;
